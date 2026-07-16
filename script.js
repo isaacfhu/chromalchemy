@@ -1,8 +1,12 @@
 let gameState = {
-  unlocked: [],
-  currencies: {},
+  unlocked: [
+    { id: "red", h: 0, s: 70, l: 50 },
+    { id: "green", h: 120, s: 70, l: 50 },
+    { id: "blue", h: 240, s: 70, l: 50 },
+  ],
+  currencies: { red: 0, green: 0, blue: 0 },
   combinations: {},
-  discoveryOrder: [],
+  discoveryOrder: ["red", "green", "blue"],
 };
 
 // Colors Math
