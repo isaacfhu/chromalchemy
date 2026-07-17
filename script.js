@@ -10,10 +10,31 @@ let gameState = {
 };
 
 // Colors Math
-function mixHue(h1, h2) {}
-function mixColors(c1, c2) {}
+function mixHue(h1, h2) {
+  const diff = ((h2 - h1 + 540) % 360) - 180;
+  return (h1 + diff / 2 + 360) % 360;
+}
+function mixColors(c1, c2) {
+  return {
+    h: mixHue(c1.h, c2.h),
+    s: 70,
+    l: 50,
+  };
+}
 
-function hslToRgb(h, s, l) {}
+function hslToRgb(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const k = (n) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n) =>
+    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return {
+    r: Math.round(255 * f(0)),
+    g: Math.round(255 * f(8)),
+    b: Math.round(255 * f(4)),
+  };
+}
 
 // Find Logic
 
