@@ -1,12 +1,12 @@
 let gameState = {
   unlocked: [
-    { id: "red", h: 0, s: 70, l: 50 },
-    { id: "green", h: 120, s: 70, l: 50 },
-    { id: "blue", h: 240, s: 70, l: 50 },
+    { id: "Red", h: 0, s: 70, l: 50 },
+    { id: "Green", h: 120, s: 70, l: 50 },
+    { id: "Blue", h: 240, s: 70, l: 50 },
   ],
   currencies: { red: 0, green: 0, blue: 0 },
   combinations: {},
-  discoveryOrder: ["red", "green", "blue"],
+  discoveryOrder: ["Red", "Green", "Blue"],
 };
 
 // Colors Math
@@ -52,12 +52,21 @@ function render() {
 
   for (const color of gameState.unlocked) {
     const chroma = document.createElement("div");
-    chroma.className = "w-15 h-15 rounded-lg m-2 cursor-grab";
-    chroma.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
-    chroma.draggable = true;
-    chroma.dataset.colorId = color.id;
+    chroma.className = "flex items-center";
 
-    chroma.addEventListener("dragstart", onDragStart);
+    const chromaColor = document.createElement("div");
+    chromaColor.className = "w-15 h-15 rounded-lg m-2 cursor-grab";
+    chromaColor.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+    chromaColor.draggable = true;
+    chromaColor.dataset.colorId = color.id;
+
+    chromaColor.addEventListener("dragstart", onDragStart);
+
+    const chromaDisplayName = document.createElement("p");
+    chromaDisplayName.textContent = color.id;
+
+    chroma.appendChild(chromaColor);
+    chroma.appendChild(chromaDisplayName);
 
     sidebar.appendChild(chroma);
   }
