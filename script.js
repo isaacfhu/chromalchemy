@@ -43,7 +43,14 @@ function rgbToHex(r, g, b) {
 
 // Find Logic
 
-function nearestColorName(rgb) {}
+function nearestColorName(rgb) {
+  const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+  const result = ntc.name(hex); // [matchedHex, name, isExactMatch]
+  return {
+    name: result[1],
+    hex: result[0],
+  };
+}
 
 // Drag & Drop
 function onDragStart(e) {}
