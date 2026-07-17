@@ -33,6 +33,11 @@ function render() {
     const chroma = document.createElement("div");
     chroma.className = "w-15 h-15 rounded-lg m-2 cursor-grab";
     chroma.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+    chroma.draggable = true;
+    chroma.dataset.colorId = color.id;
+
+    chroma.addEventListener("dragstart", onDragStart);
+
     sidebar.appendChild(chroma);
   }
 }
