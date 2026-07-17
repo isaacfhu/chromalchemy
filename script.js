@@ -36,6 +36,11 @@ function hslToRgb(h, s, l) {
   };
 }
 
+function rgbToHex(r, g, b) {
+  const toHex = (n) => n.toString(16).padStart(2, "0");
+  return "#" + toHex(r) + toHex(g) + toHex(b);
+}
+
 // Find Logic
 
 function nearestColorName(rgb) {}
