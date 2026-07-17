@@ -4,35 +4,39 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+      content="width=device-width, initial-scale=1.0" />
 
     <title>Chromalchemy</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
       rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      type="text/css" />
     <link
       rel="stylesheet"
-      href="style.css"
-    />
+      href="style.css" />
+
+    <script
+      src="libraries/colorLibrary.js"
+      defer></script>
 
     <script
       src="script.js"
-      defer
-    ></script>
-    <script
-      src="libraries/colorLibrary.js"
-      defer
-    ></script>
+      defer></script>
   </head>
   <body>
-    <div id="app">
-      <aside id="sidebar"></aside>
-      <main id="workspace"></main>
+    <div
+      id="app"
+      class="flex h-screen 100vh">
+      <main
+        id="workspace"
+        class="flex-1 relative"></main>
+      <aside
+        id="sidebar"
+        class="w-75 overflow-y-auto border-2">
+        <h3>Merge Colors!</h3>
+        <div id="color-menu"></div>
+      </aside>
     </div>
   </body>
 </html>

@@ -25,7 +25,17 @@ function onDrop(e) {}
 
 // Render
 
-function render() {}
+function render() {
+  const sidebar = document.getElementById("color-menu");
+  sidebar.innerHTML = "";
+
+  for (const color of gameState.unlocked) {
+    const chroma = document.createElement("div");
+    chroma.className = "w-15 h-15 rounded-lg m-2 cursor-grab";
+    chroma.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+    sidebar.appendChild(chroma);
+  }
+}
 
 // Game tick
 
