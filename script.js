@@ -53,6 +53,12 @@ function nearestColorName(rgb) {
 }
 
 // Drag & Drop
+function combine(colorA, colorB) {
+  const mixed = mixColors(colorA, colorB);
+  const rgb = hslToRgb(mixed.h, mixed.s, mixed.l);
+  const match = nearestColorName(rgb);
+}
+
 function onDragStart(e) {}
 function onDrop(e) {}
 
