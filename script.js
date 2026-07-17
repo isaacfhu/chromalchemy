@@ -54,9 +54,32 @@ function nearestColorName(rgb) {
 
 // Drag & Drop
 function combine(colorA, colorB) {
+  const key = [colorA.id, colorB.id].sort().join("+");
+
+  if (gameState.combinations[key]) {
+    console.log("Already discovered", gameState.combinations[key]);
+    return;
+  }
+
   const mixed = mixColors(colorA, colorB);
   const rgb = hslToRgb(mixed.h, mixed.s, mixed.l);
-  const match = nearestColorName(rgb);
+  const match = nearestColorName(rgb); // { name, hex }
+
+  gameState.combinations[key] = match.name;
+
+  const alreadyExists = gameState.unlocked.some((c) => c.id === match.name);
+  if (!alreadyExists) {
+    gameState.unlocked.push({
+      id: match.name,
+      h: mixed.h,
+      s: mixed.s,
+      l: mixed.l,
+    });
+    console.log("New discovery:", match.name);
+  }
+
+  render();
+  save();
 }
 
 function onDragStart(e) {}
