@@ -1,10 +1,15 @@
+const workspace = document.getElementById("workspace");
+
+let workspaceItems = []; // {instanceId, colorId}
+let nextInstanceId = 0;
+
 let gameState = {
   unlocked: [
     { id: "Red", h: 0, s: 70, l: 50 },
     { id: "Green", h: 120, s: 70, l: 50 },
     { id: "Blue", h: 240, s: 70, l: 50 },
   ],
-  currencies: { red: 0, green: 0, blue: 0 },
+  currencies: { Red: 0, Green: 0, Blue: 0 },
   combinations: {},
   discoveryOrder: ["Red", "Green", "Blue"],
 };
@@ -58,7 +63,7 @@ function combine(colorA, colorB) {
 
   if (gameState.combinations[key]) {
     console.log("Already discovered", gameState.combinations[key]);
-    return;
+    return gameState.combinations[key];
   }
 
   const mixed = mixColors(colorA, colorB);
@@ -75,17 +80,96 @@ function combine(colorA, colorB) {
       s: mixed.s,
       l: mixed.l,
     });
+    gameState.currencies[match.name] = 0;
+    gameState.discoveryOrder.push(match.name);
+    render();
+    save();
     console.log("New discovery:", match.name);
   }
 
-  render();
-  save();
+  return match.name;
 }
 
-function onDragStart(e) {}
-function onDrop(e) {}
+function onSidebarDragStart(e) {
+  e.dataTransfer.setData("source", "sidebar");
+  e.dataTransfer.setData("colorId", e.target.dataset.colorId);
+}
+
+function onWorkspaceItemDragStart(e) {
+  e.dataTransfer.setData("source", "workspace");
+  e.dataTransfer.setData("instanceId", e.target.dataset.instanceId);
+}
+
+function onWorkspaceDrop(e) {
+  e.preventDefault();
+  const source = e.dataTransfer.getData("source");
+
+  if (source === "sidebar" && e.target.id === "workspace") {
+    const colorId = e.dataTransfer.getData("colorId");
+    workspaceItems.push({ instanceId: nextInstanceId++, colorId });
+    renderWorkspace();
+  }
+}
+
+function onWorkspaceItemDrop(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const source = e.dataTransfer.getData("source");
+  const targetInstanceId = Number(e.currentTarget.dataset.instanceId);
+
+  let droppedColorId;
+  if (source === "sidebar") {
+    droppedColorId = e.dataTransfer.getData("colorId");
+  } else if (source === "workspace") {
+    const droppedInstanceId = Number(e.dataTransfer.getData("instanceId"));
+    if (droppedInstanceId === targetInstanceId) return;
+    const droppedItem = workspaceItems.find(
+      (i) => i.instanceId === droppedInstanceId,
+    );
+    droppedColorId = droppedItem.colorId;
+    workspaceItems = workspaceItems.filter(
+      (i) => i.instanceId !== droppedInstanceId,
+    );
+  }
+
+  const targetItem = workspaceItems.find(
+    (i) => i.instanceId === targetInstanceId,
+  );
+  const colorA = gameState.unlocked.find((c) => c.id === droppedColorId);
+  const colorB = gameState.unlocked.find((c) => c.id === targetItem.colorId);
+
+  workspaceItems = workspaceItems.filter(
+    (i) => i.instanceId !== targetInstanceId,
+  );
+
+  const resultColorId = combine(colorA, colorB);
+  if (resultColorId) {
+    workspaceItems.push({
+      instanceId: nextInstanceId++,
+      colorId: resultColorId,
+    });
+  }
+  renderWorkspace();
+}
 
 // Render
+
+function renderWorkspace() {
+  const workspace = document.getElementById("workspace");
+  workspace.innerHTML = "";
+  for (const item of workspaceItems) {
+    const color = gameState.unlocked.find((c) => c.id === item.colorId);
+    const el = document.createElement("div");
+    el.className = "w-15 h-15 rounded-lg m-2 inline-block cursor-grab";
+    el.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+    el.draggable = true;
+    el.dataset.instanceId = item.instanceId;
+    el.addEventListener("dragstart", onWorkspaceItemDragStart);
+    el.addEventListener("dragover", (e) => e.preventDefault());
+    el.addEventListener("drop", onWorkspaceItemDrop);
+    workspace.appendChild(el);
+  }
+}
 
 function render() {
   const sidebar = document.getElementById("color-menu");
@@ -101,7 +185,7 @@ function render() {
     chromaColor.draggable = true;
     chromaColor.dataset.colorId = color.id;
 
-    chromaColor.addEventListener("dragstart", onDragStart);
+    chromaColor.addEventListener("dragstart", onSidebarDragStart);
 
     const chromaDisplayName = document.createElement("p");
     chromaDisplayName.textContent = color.id;
@@ -124,5 +208,10 @@ function save() {}
 function load() {}
 
 // Init
+
+workspace.addEventListener("dragover", (e) => e.preventDefault());
+workspace.addEventListener("drop", onWorkspaceDrop);
+
 load();
 render();
+renderWorkspace();
