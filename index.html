@@ -25,6 +25,37 @@
       defer></script>
   </head>
   <body>
+    <dialog
+      id="discovery-modal"
+      class="modal">
+      <div class="modal-box flex flex-col items-center text-center max-w-sm">
+        <h3 class="text-2xl font-bold mb-2">New Color Discovered!</h3>
+
+        <!-- discovered color cube-->
+        <div
+          id="modal-color-box"
+          class="w-24 h-24 rounded-2xl my-4 shadow-xl border-4 border-white/10 transition-transform hover:scale-105"></div>
+
+        <!-- color name-->
+        <p
+          id="modal-color-name"
+          class="text-xl font-semibold mb-4"></p>
+
+        <!-- close-->
+        <div class="modal-action w-full justify-center">
+          <form method="dialog">
+            <button class="btn btn-primary px-8">Awesome!</button>
+          </form>
+        </div>
+      </div>
+
+      <form
+        method="dialog"
+        class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
     <div
       id="app"
       class="flex h-screen 100vh">

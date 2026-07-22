@@ -74,17 +74,20 @@ function combine(colorA, colorB) {
 
   const alreadyExists = gameState.unlocked.some((c) => c.id === match.name);
   if (!alreadyExists) {
-    gameState.unlocked.push({
+    const newColor = {
       id: match.name,
       h: mixed.h,
       s: mixed.s,
       l: mixed.l,
-    });
+    };
+    gameState.unlocked.push(newColor);
     gameState.currencies[match.name] = 0;
     gameState.discoveryOrder.push(match.name);
     render();
     save();
     console.log("New discovery:", match.name);
+
+    showDiscoveryModal(newColor);
   }
 
   return match.name;
@@ -183,6 +186,26 @@ function onWorkspaceItemDrop(e) {
     });
   }
   renderWorkspace();
+}
+
+// Discovery
+function showDiscoveryModal(color) {
+  const modal = document.getElementById("discovery-modal");
+  const colorBox = document.getElementById("modal-color-box");
+  const colorName = document.getElementById("modal-color-name");
+
+  if (!modal) return;
+
+  colorBox.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+  colorName.textContent = color.id;
+
+  modal.showModal();
+
+  setTimeout(() => {
+    if (modal.open) {
+      modal.close();
+    }
+  }, 2000);
 }
 
 // Render
