@@ -199,13 +199,25 @@ function render() {
 
 // Game tick
 
-setInterval(() => {}, 1000);
+setInterval(() => {
+  for (const color of gameState.unlocked) {
+    gameState.currencies[color.id] = (gameState.currencies[color.id] || 0) + 1;
+  }
+  render();
+}, 1000);
 
 // Save Logic
 
-function save() {}
+function save() {
+  localStorage.setItem("gameState", JSON.stringify(gameState));
+}
 
-function load() {}
+function load() {
+  const saved = localStorage.getItem("gameState");
+  if (saved) {
+    gameState = JSON.parse(saved);
+  }
+}
 
 // Init
 
