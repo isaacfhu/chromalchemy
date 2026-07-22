@@ -1,6 +1,6 @@
 const workspace = document.getElementById("workspace");
 
-let workspaceItems = []; // {instanceId, colorId}
+let workspaceItems = []; // {instanceId, colorId, x, y}
 let nextInstanceId = 0;
 
 let gameState = {
@@ -93,21 +93,47 @@ function combine(colorA, colorB) {
 function onSidebarDragStart(e) {
   e.dataTransfer.setData("source", "sidebar");
   e.dataTransfer.setData("colorId", e.target.dataset.colorId);
+
+  const rect = e.target.getBoundingClientRect();
+  e.dataTransfer.setData("offsetX", e.clientX - rect.left);
+  e.dataTransfer.setData("offsetY", e.clientY - rect.top);
 }
 
 function onWorkspaceItemDragStart(e) {
   e.dataTransfer.setData("source", "workspace");
   e.dataTransfer.setData("instanceId", e.target.dataset.instanceId);
+
+  const rect = e.target.getBoundingClientRect();
+  e.dataTransfer.setData("offsetX", e.clientX - rect.left);
+  e.dataTransfer.setData("offsetY", e.clientY - rect.top);
 }
 
 function onWorkspaceDrop(e) {
   e.preventDefault();
+
+  if (e.target !== workspace) return;
+
   const source = e.dataTransfer.getData("source");
+  const workspaceRect = workspace.getBoundingClientRect();
+
+  const offsetX = Number(e.dataTransfer.getData("offsetX")) || 0;
+  const offsetY = Number(e.dataTransfer.getData("offsetY")) || 0;
+
+  const x = e.clientX - workspaceRect.left - offsetX;
+  const y = e.clientY - workspaceRect.top - offsetY;
 
   if (source === "sidebar" && e.target.id === "workspace") {
     const colorId = e.dataTransfer.getData("colorId");
-    workspaceItems.push({ instanceId: nextInstanceId++, colorId });
+    workspaceItems.push({ instanceId: nextInstanceId++, colorId, x, y });
     renderWorkspace();
+  } else if (source === "workspace") {
+    const instanceId = Number(e.dataTransfer.getData("instanceId"));
+    const item = workspaceItems.find((i) => i.instanceId === instanceId);
+    if (item) {
+      item.x = x;
+      item.y = y;
+      renderWorkspace();
+    }
   }
 }
 
@@ -127,6 +153,7 @@ function onWorkspaceItemDrop(e) {
       (i) => i.instanceId === droppedInstanceId,
     );
     droppedColorId = droppedItem.colorId;
+
     workspaceItems = workspaceItems.filter(
       (i) => i.instanceId !== droppedInstanceId,
     );
@@ -135,6 +162,10 @@ function onWorkspaceItemDrop(e) {
   const targetItem = workspaceItems.find(
     (i) => i.instanceId === targetInstanceId,
   );
+
+  const targetX = targetItem.x;
+  const targetY = targetItem.y;
+
   const colorA = gameState.unlocked.find((c) => c.id === droppedColorId);
   const colorB = gameState.unlocked.find((c) => c.id === targetItem.colorId);
 
@@ -147,6 +178,8 @@ function onWorkspaceItemDrop(e) {
     workspaceItems.push({
       instanceId: nextInstanceId++,
       colorId: resultColorId,
+      x: targetX,
+      y: targetY,
     });
   }
   renderWorkspace();
@@ -160,8 +193,13 @@ function renderWorkspace() {
   for (const item of workspaceItems) {
     const color = gameState.unlocked.find((c) => c.id === item.colorId);
     const el = document.createElement("div");
-    el.className = "w-15 h-15 rounded-lg m-2 inline-block cursor-grab";
+
+    el.className = "w-15 h-15 rounded-lg absolute cursor-grab";
     el.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+
+    el.style.left = `${item.x}px`;
+    el.style.top = `${item.y}px`;
+
     el.draggable = true;
     el.dataset.instanceId = item.instanceId;
     el.addEventListener("dragstart", onWorkspaceItemDragStart);
@@ -203,7 +241,6 @@ setInterval(() => {
   for (const color of gameState.unlocked) {
     gameState.currencies[color.id] = (gameState.currencies[color.id] || 0) + 1;
   }
-  render();
 }, 1000);
 
 // Save Logic
