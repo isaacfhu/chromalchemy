@@ -116,6 +116,7 @@ function onWorkspaceItemDragStart(e) {
 
 function onWorkspaceDrop(e) {
   e.preventDefault();
+  playSFX("sounds/place.mp3");
 
   if (e.target !== workspace) return;
 
