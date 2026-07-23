@@ -25,6 +25,26 @@ Starting with the 3 primary colors (Red, Green, Blue), drag and combine hues on 
 - **External Library:**
   [`ntc.js`](https://chir.ag/projects/ntc/) (Name That Color) for color name matching.
 
+---
+
+## Getting Started
+
+### Prerequisites
+
+No build toors or dynamic server are required. You just need a modern web browser.
+
+### Running Locally
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone [https://github.com/your-username/chromalchemy.git](https://github.com/your-username/chromalchemy.git)
+   cd chromalchemy
+   ```
+
+2. **Launch**
+   Open index.html directly in your browser or run it using a local static server(example: Live Server in VSCode)
+
 ## How to Play
 
 1. Drag Red, Green, or Blue from the right sidebar onto workspace.
@@ -39,4 +59,4 @@ Starting with the 3 primary colors (Red, Green, Blue), drag and combine hues on 
 
 Project published to [Macondo HackClub](https://macondo.hackclub.com/projects/14128)
 
-Game inspired by Little Alchemy
+Game inspired by _Little Alchemy_
