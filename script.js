@@ -207,6 +207,12 @@ function showDiscoveryModal(color) {
     }
   }, 3000);
 }
+// Top left buttons
+
+document.getElementById("clear-workspace-btn").addEventListener("click", () => {
+  workspaceItems = [];
+  renderWorkspace();
+});
 
 // Progress
 function updateProgressText() {
