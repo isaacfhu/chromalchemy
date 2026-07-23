@@ -207,7 +207,7 @@ function showDiscoveryModal(color) {
     }
   }, 3000);
 }
-// Top left buttons
+// Clear workspace
 
 document.getElementById("clear-workspace-btn").addEventListener("click", () => {
   workspaceItems = [];
@@ -294,6 +294,28 @@ function load() {
     gameState = JSON.parse(saved);
   }
 }
+
+// Theme switch
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+}
+
+function toggleTheme(theme) {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next =
+    current === "chromalchemy-dark"
+      ? "chromalchemy-light"
+      : "chromalchemy-dark";
+  applyTheme(next);
+}
+
+document
+  .getElementById("theme-toggle-btn")
+  .addEventListener("click", toggleTheme);
+
+const savedTheme = localStorage.getItem("theme") || "chromalchemy-light";
+applyTheme(savedTheme);
 
 // Init
 
