@@ -1,5 +1,7 @@
 # Chromalchemy
 
+Play here: https://isaacfhu.github.io/chromalchemy/
+
 **Chromalchemy** is an elemental alchemy-style puzzle game, but with colors!
 Starting with the 3 primary colors (Red, Green, Blue), drag and combine hues on the workspace to combine them and unlock hundreds of real named colors.
 
@@ -32,5 +34,9 @@ Starting with the 3 primary colors (Red, Green, Blue), drag and combine hues on 
 3. If the mixture produces a new shade, it will be added to your color inventory!
 
 4. Try to discover all named colors to fill your progress counter at the bottom left.
+
+## More
+
+Project published to [Macondo HackClub](https://macondo.hackclub.com/projects/14128)
 
 Game inspired by Little Alchemy
