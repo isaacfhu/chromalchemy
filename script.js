@@ -94,6 +94,7 @@ function combine(colorA, colorB) {
 }
 
 function onSidebarDragStart(e) {
+  playSFX("sounds/grab.mp3");
   e.dataTransfer.setData("source", "sidebar");
   e.dataTransfer.setData("colorId", e.target.dataset.colorId);
 
@@ -103,6 +104,8 @@ function onSidebarDragStart(e) {
 }
 
 function onWorkspaceItemDragStart(e) {
+  playSFX("sounds/grab.mp3");
+
   e.dataTransfer.setData("source", "workspace");
   e.dataTransfer.setData("instanceId", e.target.dataset.instanceId);
 
@@ -145,6 +148,8 @@ function onWorkspaceItemDrop(e) {
   e.stopPropagation();
   const source = e.dataTransfer.getData("source");
   const targetInstanceId = Number(e.currentTarget.dataset.instanceId);
+
+  playSFX("sounds/pop.mp3");
 
   let droppedColorId;
   if (source === "sidebar") {
@@ -200,6 +205,7 @@ function showDiscoveryModal(color) {
   colorName.textContent = color.id;
 
   modal.showModal();
+  playSFX("sounds/achievement.mp3");
 
   setTimeout(() => {
     if (modal.open) {
@@ -207,8 +213,8 @@ function showDiscoveryModal(color) {
     }
   }, 3000);
 }
-// Clear workspace
 
+// Clear workspace
 document.getElementById("clear-workspace-btn").addEventListener("click", () => {
   workspaceItems = [];
   renderWorkspace();
@@ -224,7 +230,6 @@ function updateProgressText() {
 }
 
 // Render
-
 function renderWorkspace() {
   const workspace = document.getElementById("workspace");
   workspace.innerHTML = "";
@@ -275,7 +280,6 @@ function render() {
 }
 
 // Game tick
-
 setInterval(() => {
   for (const color of gameState.unlocked) {
     gameState.currencies[color.id] = (gameState.currencies[color.id] || 0) + 1;
@@ -283,7 +287,6 @@ setInterval(() => {
 }, 1000);
 
 // Save Logic
-
 function save() {
   localStorage.setItem("gameState", JSON.stringify(gameState));
 }
@@ -294,6 +297,25 @@ function load() {
     gameState = JSON.parse(saved);
   }
 }
+
+// Audio
+function playSFX(audioPath) {
+  const sound = new Audio(audioPath);
+  sound.currentTime = 0;
+  sound.play().catch((error) => {
+    console.log(
+      "Audio play blocked until user interacts with document:",
+      error,
+    );
+  });
+}
+
+const btns = document.querySelectorAll(".btn");
+btns.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    playSFX("sounds/click.mp3");
+  }),
+);
 
 // Theme switch
 function applyTheme(theme) {
