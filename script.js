@@ -205,7 +205,16 @@ function showDiscoveryModal(color) {
     if (modal.open) {
       modal.close();
     }
-  }, 2000);
+  }, 3000);
+}
+
+// Progress
+function updateProgressText() {
+  const progressEl = document.getElementById("progress-text");
+  if (!progressEl) return;
+  const discovered = gameState.discoveryOrder.length;
+  const total = ntc.names.length;
+  progressEl.textContent = `${discovered} / ${total}`;
 }
 
 // Render
@@ -230,6 +239,7 @@ function renderWorkspace() {
     el.addEventListener("drop", onWorkspaceItemDrop);
     workspace.appendChild(el);
   }
+  updateProgressText();
 }
 
 function render() {
